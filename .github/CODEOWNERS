@@ -1,0 +1,5 @@
+# Every file in this repository is owned by @peppasnet.
+#
+# Together with the "Require review from Code Owners" rule on the main branch,
+# this means a pull request can only be merged after @peppasnet approves it.
+* @peppasnet
