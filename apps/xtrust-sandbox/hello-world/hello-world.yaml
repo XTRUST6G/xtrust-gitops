@@ -65,7 +65,7 @@ spec:
           configMap:
             name: hello-world
 ---
-# 3. The Service: one stable internal name/IP in front of the 2 pods.
+# 3. The Service: one stable internal name/IP in front of the pods.
 apiVersion: v1
 kind: Service
 metadata:
