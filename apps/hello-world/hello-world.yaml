@@ -21,14 +21,14 @@ data:
       </body>
     </html>
 ---
-# 2. The Deployment: "keep 2 copies (pods) of this nginx web server running".
+# 2. The Deployment: "keep 3 copies (pods) of this nginx web server running".
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-world
   namespace: xtrust-sandbox
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: hello-world          # which pods belong to this Deployment
