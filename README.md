@@ -1,82 +1,64 @@
 # xtrust-gitops
 
-Deployments for the XTRUST-6G Kubernetes cluster. Whatever is on the `main` branch
-is what runs on the cluster: Argo CD reads this repository and applies it.
+Whatever is on `main` runs on the XTRUST-6G Kubernetes cluster. Argo CD applies
+it within about 3 minutes of a merge.
 
-## Layout
+## Before you start
 
-```
-apps/<namespace>/<app>/*.yaml
-```
+Ask the cluster admin for:
 
-Each partner has one folder under `apps/`, named like its namespace on the cluster.
+- your folder name, which is also your namespace (for example `uop`)
+- your read-only kubeconfig file, and VPN access to use it
 
-## How to deploy
+## Deploy
 
 1. Fork this repository and create a branch.
-2. Add or change plain Kubernetes YAML files under `apps/<your-folder>/<app-name>/`.
-3. Open a pull request against `main`.
-4. After the pull request is approved and merged, the change is on the cluster
-   within about 3 minutes.
+2. Put plain Kubernetes YAML in `apps/<your-folder>/<app-name>/`. You can copy
+   [`apps/xtrust-sandbox/hello-world/`](apps/xtrust-sandbox/hello-world/hello-world.yaml)
+   as a start.
+3. Open a pull request against `main`. It is deployed once the admin approves
+   and merges it.
 
-To remove something from the cluster, delete its file in a pull request.
+To change something, edit the file in a new pull request. To remove it, delete
+the file.
 
 ## Rules
 
 - Change only your own folder.
-- Leave `namespace:` out of your manifests; your namespace is filled in
-  automatically. Manifests that point to another namespace are refused.
-- **No passwords or tokens in plain text.** This repository is public. Put them
-  in as a `SealedSecret` (see [Secrets](#secrets)).
-- Use container images that can be pulled without a login.
-- Refused: cluster-wide objects, plain `Secret`, `Role`, `RoleBinding`,
-  `ResourceQuota`, `LimitRange`, and Services of type `LoadBalancer` or `NodePort`.
-- Each namespace has a quota, and containers without their own `resources` get
-  small defaults. See both with `kubectl describe resourcequota,limitrange`.
+- Leave `namespace:` out; yours is filled in automatically.
+- Images must be pullable without a login.
+- No passwords or tokens in plain text; see [Secrets](#secrets).
+- Refused: cluster-wide objects, `Secret`, `Role`, `RoleBinding`,
+  `ResourceQuota`, `LimitRange`, Services of type `LoadBalancer` or `NodePort`.
+- Your namespace has a quota: `kubectl describe resourcequota,limitrange`.
 
-## Secrets
-
-A `SealedSecret` is an encrypted copy of a Secret. Only the cluster can decrypt
-it, so it is safe in this public repository. After the merge, the cluster turns
-it into a normal Secret with the same name in your namespace.
-
-1. Install `kubeseal` once, from
-   <https://github.com/bitnami-labs/sealed-secrets/releases> (`kubeseal-...` for
-   your system; on macOS `brew install kubeseal`).
-2. In the repository folder, encrypt the value. This runs on your computer only;
-   it needs no access to the cluster.
-
-   ```
-   kubectl create secret generic my-secret --namespace <your-namespace> --from-literal=password=CHANGE-ME --dry-run=client -o yaml | kubeseal --cert sealed-secrets-cert.pem -o yaml -w apps/<your-folder>/<app-name>/my-secret.yaml
-   ```
-
-3. Commit `my-secret.yaml` and open a pull request.
-4. Use the Secret in your Deployment as usual:
-
-   ```yaml
-   env:
-     - name: DB_PASSWORD
-       valueFrom:
-         secretKeyRef:
-           name: my-secret
-           key: password
-   ```
-
-Good to know:
-
-- The encrypted file works only for that secret name in that namespace.
-- To change a value, run the command again and replace the file.
-- To keep the value out of your shell history, put it in a file and use
-  `--from-file=password=./password.txt` instead of `--from-literal`. Do not
-  commit that file.
-- `apps/xtrust-sandbox/hello-secret/` is a working example.
-
-## Looking at your application
-
-The cluster admin gives each partner a read-only kubeconfig file for its namespace:
+## Check your app
 
 ```
 kubectl --kubeconfig <file> get pods
 kubectl --kubeconfig <file> logs <pod-name>
-kubectl --kubeconfig <file> describe pod <pod-name>
+kubectl --kubeconfig <file> get events
 ```
+
+The kubeconfig is read-only and limited to your namespace. If nothing appears
+5 minutes after the merge, ask the admin: the pull request probably contains
+something that is refused.
+
+## Secrets
+
+Commit a secret encrypted, as a `SealedSecret`. Only the cluster can decrypt it;
+there it becomes a normal Secret with the same name.
+
+1. Install `kubeseal` from
+   <https://github.com/bitnami-labs/sealed-secrets/releases>.
+2. In the repository folder, run (works offline):
+
+   ```
+   kubectl create secret generic my-secret --namespace <your-folder> --from-literal=password=CHANGE-ME --dry-run=client -o yaml | kubeseal --cert sealed-secrets-cert.pem -o yaml -w apps/<your-folder>/<app-name>/my-secret.yaml
+   ```
+
+3. Add `my-secret.yaml` to your pull request and use the Secret as usual, for
+   example with `secretKeyRef` (`name: my-secret`, `key: password`).
+
+The file works only for that secret name and namespace. For a new value, run the
+command again. Example: `apps/xtrust-sandbox/hello-secret/`.

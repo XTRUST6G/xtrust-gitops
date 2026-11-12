@@ -1,15 +1,17 @@
-# Hello-world web page in the xtrust-sandbox namespace.
+# Hello-world web page. You can copy this file into your own folder as a start.
 #
 # Argo CD deploys this file from the `main` branch. Do not `kubectl apply` it by
 # hand: change it in a branch, open a pull request, and it is deployed once the
 # pull request is approved and merged.
+#
+# There is no `namespace:` in this file: Argo CD fills in the namespace that
+# belongs to the folder.
 
 # 1. The page itself, stored in the cluster as a ConfigMap (a small bag of files/settings).
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hello-world
-  namespace: xtrust-sandbox
 data:
   index.html: |
     <!doctype html>
@@ -17,7 +19,7 @@ data:
       <head><meta charset="utf-8"><title>Hello world</title></head>
       <body style="font-family:sans-serif;max-width:600px;margin:3em auto;">
         <h1>Hello, world!</h1>
-        <p>Served from the xtrust-sandbox namespace.</p>
+        <p>Deployed from the xtrust-gitops repository.</p>
       </body>
     </html>
 ---
@@ -26,7 +28,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-world
-  namespace: xtrust-sandbox
 spec:
   replicas: 3
   selector:
@@ -70,7 +71,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hello-world
-  namespace: xtrust-sandbox
 spec:
   selector:
     app: hello-world            # send traffic to pods with this label
