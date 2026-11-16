@@ -77,3 +77,25 @@ spec:
   ports:
     - port: 80
       targetPort: 80
+---
+# 4. The Ingress: "requests for this hostname go to the hello-world Service".
+#    This is what makes the app reachable from outside the cluster.
+#    If you copy this file: delete this part, or use the hostname the admin
+#    gave you. Two apps cannot share one hostname.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: hello.xtrust-6g.eurodyn.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-world
+                port:
+                  number: 80

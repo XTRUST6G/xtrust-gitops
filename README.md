@@ -62,3 +62,9 @@ there it becomes a normal Secret with the same name.
 
 The file works only for that secret name and namespace. For a new value, run the
 command again. Example: `apps/xtrust-sandbox/hello-secret/`.
+
+## Problems and requests
+
+Open an [issue](https://github.com/XTRUST6G/xtrust-gitops/issues), for example when
+something does not work or you need a folder or more quota. Issues are public:
+never paste passwords, tokens or your kubeconfig.
