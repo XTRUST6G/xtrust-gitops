@@ -89,7 +89,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: hello.xtrust-6g.eurodyn.com
+    - host: hello-xtrust-6g.eurodyn.com
       http:
         paths:
           - path: /
