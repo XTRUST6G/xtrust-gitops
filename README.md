@@ -44,6 +44,18 @@ The kubeconfig is read-only and limited to your namespace. If nothing appears
 5 minutes after the merge, ask the admin: the pull request probably contains
 something that is refused.
 
+## Public address
+
+Without an `Ingress`, an app is reachable only inside the cluster. To publish it:
+
+1. Open an issue to ask the admin for a hostname. It has the form
+   `<your-folder>-<app-name>-xtrust-6g.eurodyn.com`.
+2. Add an `Ingress` with that hostname to your app, as in the
+   [hello-world example](apps/xtrust-sandbox/hello-world/hello-world.yaml).
+
+HTTPS is handled in front of the cluster: use plain HTTP in the Ingress and no
+`tls:` section.
+
 ## Secrets
 
 Commit a secret encrypted, as a `SealedSecret`. Only the cluster can decrypt it;
