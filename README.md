@@ -8,7 +8,8 @@ it within about 3 minutes of a merge.
 Ask the cluster admin for:
 
 - your folder name, which is also your namespace (for example `uop`)
-- your read-only kubeconfig file, and VPN access to use it
+- your read-only kubeconfig file (valid for one year), and VPN access to use it
+- access to your private repository for tickets
 
 ## Deploy
 
@@ -41,17 +42,19 @@ kubectl --kubeconfig <file> get events
 ```
 
 The kubeconfig is read-only and limited to your namespace. If nothing appears
-5 minutes after the merge, ask the admin: the pull request probably contains
-something that is refused.
+5 minutes after the merge, [open a ticket](#problems-and-requests): the pull
+request probably contains something that is refused.
 
 ## Public address
 
 Without an `Ingress`, an app is reachable only inside the cluster. To publish it:
 
-1. Open an issue to ask the admin for a hostname. It has the form
-   `<your-folder>-<app-name>-xtrust-6g.eurodyn.com`.
+1. [Open a ticket](#problems-and-requests) for a hostname of the form
+   `<your-folder>-<app-name>-xtrust-6g.eurodyn.com`, and say whether it is public
+   or internal only. It works once the admin confirms it.
 2. Add an `Ingress` with that hostname to your app, as in the
    [hello-world example](apps/xtrust-sandbox/hello-world/hello-world.yaml).
+   Use no other hostname.
 
 HTTPS is handled in front of the cluster: use plain HTTP in the Ingress and no
 `tls:` section.
@@ -77,6 +80,7 @@ command again. Example: `apps/xtrust-sandbox/hello-secret/`.
 
 ## Problems and requests
 
-Open an [issue](https://github.com/XTRUST6G/xtrust-gitops/issues), for example when
-something does not work or you need a folder or more quota. Issues are public:
-never paste passwords, tokens or your kubeconfig.
+Open an issue in your own private repository in the XTRUST6G organization, for
+example when something does not work or you need a hostname, more quota or a new
+kubeconfig. Only your team and the admins see it. Never paste passwords, tokens
+or your kubeconfig.
