@@ -9,16 +9,19 @@ Ask the cluster admin for:
 
 - your folder name, which is also your namespace (for example `uop`)
 - your read-only kubeconfig file (valid for one year), and VPN access to use it
-- access to your private repository for tickets
+- access to your team's private repository in XTRUST6G, used for tickets
 
 ## Deploy
 
-1. Fork this repository and create a branch.
+1. Fork this repository (once) and create a branch. Before each new change,
+   click **Sync fork** on your fork.
 2. Put plain Kubernetes YAML in `apps/<your-folder>/<app-name>/`. You can copy
    [`apps/xtrust-sandbox/hello-world/`](apps/xtrust-sandbox/hello-world/hello-world.yaml)
    as a start.
-3. Open a pull request against `main`. It is deployed once the admin approves
-   and merges it.
+3. Open a pull request against `main`. Start its title with your folder name,
+   then what changes, for example `uop - add web-api`. In the description, say
+   in one or two sentences what it does.
+4. Wait for the admin to approve and merge it. Only the admin can merge.
 
 To change something, edit the file in a new pull request. To remove it, delete
 the file.
@@ -86,7 +89,7 @@ command again. Example: `apps/xtrust-sandbox/hello-secret/`.
 
 ## Problems and requests
 
-Open an issue in your private ticket repository,
-`XTRUST6G/tickets-<your-folder>`, for example when something does not work or you need a hostname, more quota or a new
-kubeconfig. Only your team and the admins see it. Never paste passwords, tokens
-or your kubeconfig.
+Open an issue in your team's private repository in XTRUST6G (for example
+`XTRUST6G/UOP`), for example when something does not work or you need a
+hostname, more quota or a new kubeconfig. Only your team and the admins see it.
+Never paste passwords, tokens or your kubeconfig.
