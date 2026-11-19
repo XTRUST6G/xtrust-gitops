@@ -30,7 +30,13 @@ the file.
 - Images must be pullable without a login.
 - No passwords or tokens in plain text; see [Secrets](#secrets).
 - Refused: cluster-wide objects, `Secret`, `Role`, `RoleBinding`,
-  `ResourceQuota`, `LimitRange`, Services of type `LoadBalancer` or `NodePort`.
+  `ResourceQuota`, `LimitRange`, `NetworkPolicy`, Services of type
+  `LoadBalancer` or `NodePort`.
+- Pods must meet the Kubernetes
+  [baseline](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline)
+  level: no privileged containers, host network, host ports or host paths.
+- Your pods can reach each other, DNS and the internet, but not pods in other
+  namespaces. From outside they are reachable only through your `Ingress`.
 - Your namespace has a quota: `kubectl describe resourcequota,limitrange`.
 
 ## Check your app
@@ -80,7 +86,7 @@ command again. Example: `apps/xtrust-sandbox/hello-secret/`.
 
 ## Problems and requests
 
-Open an issue in your own private repository in the XTRUST6G organization, for
-example when something does not work or you need a hostname, more quota or a new
+Open an issue in your private ticket repository,
+`XTRUST6G/tickets-<your-folder>`, for example when something does not work or you need a hostname, more quota or a new
 kubeconfig. Only your team and the admins see it. Never paste passwords, tokens
 or your kubeconfig.
