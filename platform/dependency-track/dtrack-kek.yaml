@@ -1,0 +1,17 @@
+# Encrypted with sealed-secrets-cert.pem; only the cluster can decrypt it.
+# Sync wave -2: created before the database and Dependency-Track start.
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  name: dtrack-kek
+  namespace: dependency-track
+spec:
+  encryptedData:
+    kek: AgBjSrOjnDgqXEO/8uEgOlm08+35gtFvk6rmb2AfpiGyWM/25PO7EtRToXQFF86+xP3qnfLWb12d3eWvgS2ThjH7ErB678UpzRZYAIciYyL858fdLJlde2DBhzB5g8tKiKu2Fqv3dICsCkx+fmhhBGAc/bq3eSMPbrOC37w2imDHClRl7SBSPYPoOrUOJsVDhq5YdCLVOKf2DF6H7+qHnshnGzH5Q75BaJTj9TJzR38O5EBE0LBBxA2tSun4xjOhCZaStSLF8KXf+S692ZZatTeSHJfrXhSvVIWmrZ1piUiNWFO/NLJjGndHptV2qb/JsB7LticoGPFZsUI9JEEto7dj9DXwl/JlBAmDIQKAGpkmyra8B+I9Al2pSwVhRkUzfFsOJ3y1YpchWmBGRnzvywWcOK5eLzz4csV3wuTYhbEHszYm+8R0/EsDeOorzPYezasoS8KbyWMK6dep4qubS7g577q1gMu9pn/Kxl48Hb8WFC8WdNnAaqRfOp1VkZXk0G+cHUyFwC/OQ6evKWF5lkm+MVvioypUR1RbgSpsKBXNeTNynwPn9FCDafGi3K4CN8QY4VKJ+tY08iVGOTTwXoM+h5VadHW9pTc3nft3WRXwbxCk5/r4iRDP3bA78ALvn5Q5KdZKbluz5DNeMmYICJFtK8MhCYN1BpxUYQDyQPpOQpV57eXN3ezWOmO1cySirHPaKS5eQ6oY9zvh4DNcHBBr6XTYugk2cvsesccgaMH1bfS/29XzTZjSsug8lw==
+  template:
+    metadata:
+      name: dtrack-kek
+      namespace: dependency-track

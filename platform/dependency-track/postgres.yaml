@@ -1,0 +1,73 @@
+# PostgreSQL database for Dependency-Track (official postgres image).
+# Part of the dependency-track application (platform/dependency-track.yaml).
+# Sync wave -1: the database starts before Dependency-Track itself.
+# The data volume (20Gi) is kept even if this file is deleted.
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18.7-alpine
+          env:
+            - name: POSTGRES_DB
+              value: dtrack
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: dtrack-db
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dtrack-db
+                  key: password
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-h", "127.0.0.1", "-p", "5432"]
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 20Gi

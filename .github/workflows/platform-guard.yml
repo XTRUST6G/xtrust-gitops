@@ -1,0 +1,41 @@
+# Blocks pull requests that change platform/ or .github/ unless the admin opened them.
+#
+# platform/ is installed by Argo CD with cluster-wide rights, so only the admin may
+# change it. Partners change only apps/<their-folder>/.
+#
+# This check is required by the protect-main ruleset (status check "platform-guard").
+# It runs on pull_request_target, so GitHub always uses the copy of this file on
+# main: a pull request cannot switch the check off by editing it. It never checks
+# out or runs code from the pull request; it only reads the list of changed files.
+name: platform-guard
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  platform-guard:
+    name: platform-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only the admin may change platform/ or .github/
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          ADMIN: peppasnet
+        run: |
+          # New and old names, so moving a file out of platform/ is caught too.
+          files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[] | .filename, (.previous_filename // empty)')
+          blocked=$(printf '%s\n' "$files" | grep -E '^(platform/|\.github/)' || true)
+          if [ -n "$blocked" ] && [ "$AUTHOR" != "$ADMIN" ]; then
+            echo "::error::Only the admin may change these files:"
+            printf '%s\n' "$blocked"
+            exit 1
+          fi
+          echo "OK: no admin-only files changed, or the admin opened this pull request."

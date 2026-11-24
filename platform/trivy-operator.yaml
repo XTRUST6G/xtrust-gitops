@@ -1,0 +1,48 @@
+# Trivy Operator: scans every running image in the cluster for known
+# vulnerabilities, risky settings and secrets left in images.
+# Results are Kubernetes objects next to each app, for example:
+#   kubectl get vulnerabilityreports -A
+#   kubectl get configauditreports -A
+# Partners see the reports of their own namespace with their read-only kubeconfig.
+#
+# ADMIN ONLY: everything in platform/ is installed with cluster-wide rights.
+# To upgrade, change targetRevision in a pull request.
+# Chart settings: https://github.com/aquasecurity/trivy-operator/blob/main/deploy/helm/values.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: trivy-operator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # deleting this file uninstalls the tool
+spec:
+  project: platform
+  source:
+    repoURL: https://aquasecurity.github.io/helm-charts/
+    chart: trivy-operator
+    targetRevision: 0.38.1          # Trivy Operator 0.36.1
+    helm:
+      valuesObject:
+        operator:
+          # At most 3 scans at the same time, to keep the load low.
+          scanJobsConcurrentLimit: 3
+          # One shared Trivy server keeps the vulnerability database (5Gi volume),
+          # instead of every scan downloading it again.
+          builtInTrivyServer: true
+          # Software lists (SBOMs) come from Syft into Dependency-Track instead.
+          sbomGenerationEnabled: false
+        # Rancher Monitoring (Prometheus) collects the findings as metrics.
+        serviceMonitor:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: trivy-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # The chart creates its own object types (CRDs) and objects of those types
+      # in one go; do not pre-check the objects before their types exist.
+      - SkipDryRunOnMissingResource=true

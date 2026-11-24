@@ -1,0 +1,18 @@
+# Encrypted with sealed-secrets-cert.pem; only the cluster can decrypt it.
+# Sync wave -2: created before the database and Dependency-Track start.
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  name: dtrack-db
+  namespace: dependency-track
+spec:
+  encryptedData:
+    password: AgB4ZKdfGlFyZgSuDk4Cca3u7T9WW03AkFoR752Ov7AbKJp+8yuoLDAk1nr/V5cbpq4KZa/3zb98aM8OOzWMY1jhkVF+J6yq7N+gFYh2mgAJjov10kjIhclftvK8aYpd+UM+y4OuWgBZNhtDmxW+VcqSV+SdcsDyixbhZbophQdtAkJDTRuTFKGrw5FebAaJW3y60aHA4SnHYwd5ekSGde8cWRX5Bkg++4CfwMVUly3SWrvBjKLN4FYnyMNhGkyXoYo39K9J0oDgRrVv/L5P66lAZuYSZ0cxWLxKX1xLGixIN2RwWsGac+MSp6WF4/5e/zqBcK3fJ4TG/OrnwcifEiXbGjj8K4Oy/3mDjPpX0PTUXu6/6j76h8wohE/9MZCib0tQNb122jtsaywvX/PqtC/nYTugj+Iy6g8JLW2xAVZXHQQEwSaXIQ+6G4i2rNEEmG9o+2NDiv3zI2WLRb2D3um3K66VFqmxCL/fe680Ye3w8hMLtUb76M4VoFkbwUNf/tDDubTCogCPupXZZiwuACtGBxqplRhrJiNyWsbXSqijmgHwLAQkx1/kl8O5zgbknvHIdMVq10FzuKU/teFeuE3rdrF15xF71sAsx+Fwrgb8Etj/9b2pbeBWOr8OhZOImaARPafR6rTNL1fHZymfM1hWuK/VOp894y/ZQR9SCiLkPttpXY1VmiFv9C6gdZd0oTuxBise53sGkvSCraYvvsQaZet1d2TfgvifZMFl9Gbx/e2acXmgQlGJXxV4kz2/WzQ=
+    username: AgAogz8/9vTMrYcbU8dpT2X/qlTm6BZIBJV8C1D89b+LMx/K1xn60+RLxSXtfSO78QpYCjYPb30NDdXRtBTeQki1sGa/DpyYxqltTGAC1lniN1e1f7xX5m1flO4bZwciUJ2RcgoyyuViyCjxzOB3/AEM9cGO5K8PESmOg/O66FqmCNeDpqb53NqUTZhLI58qvXUcZPpx0ombyUV5ETeaymyLiWzlGx3lnvW6vCvtFDTW0ZEH8XKb1er2z1sGKT2N+t9yVAs2QUQGU7kuQUGIVpYERuBFY14/295HnyZoKxPeSGZ3OtoCcBTsejufUegD5mtEkhJGXzS3eZjNpk/IzW66YXrSuaHqWZ3JhTjwwcVuDEuaBds1j5booNGw1S6mcWRUya8OOYxT3nZKuhDKEP4+gKe+2ox1BUsXbPVozI3Dv6zgl3xBlQkgQunXQ+4HLekRDxRFNJM6p5FwarC8PkiN657inLq3uLY3L4MePXorES250+mEu7XZnXfEu2p/klYCHsiIMMPhZd3nt/Ngx3QpXRfAH+cQ86NgEjQDy2sY72bNEuV/zeJtBvbsB8VYWy4Xwihxgr0A4EQrl3qWAzyHnHwvulrgve5jhpOivCNceYjU/sskjCWsSLp60hQFb25UuWA3+TS8xIts08ow6eIxyfB3zhE7qSzk2ynJDuyIlLWoArRMBab1FUWHmHy+pHAstOfmD0U=
+  template:
+    metadata:
+      name: dtrack-db
+      namespace: dependency-track

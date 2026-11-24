@@ -1,0 +1,59 @@
+# Dependency-Track 5: keeps the software list (SBOM) of every image and keeps
+# checking it against new vulnerabilities. Web interface for the admin.
+#
+# Two sources:
+#   1. the official Helm chart (web interface + API server)
+#   2. platform/dependency-track/ in this repository: its PostgreSQL database and
+#      the encrypted passwords (SealedSecrets)
+#
+# Open the web interface (until it has a hostname), in two terminals:
+#   kubectl -n dependency-track port-forward svc/dependency-track-api-server 8080:8080
+#   kubectl -n dependency-track port-forward svc/dependency-track-frontend 8081:8080
+# then browse to http://localhost:8081 (first login admin / admin, then change it).
+#
+# ADMIN ONLY: everything in platform/ is installed with cluster-wide rights.
+# Before raising targetRevision read the upgrade notes:
+# https://github.com/DependencyTrack/helm-charts/blob/main/charts/dependency-track/UPGRADING.md
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dependency-track
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # deleting this file uninstalls the tool
+spec:
+  project: platform
+  sources:
+    - repoURL: https://dependencytrack.github.io/helm-charts
+      chart: dependency-track
+      targetRevision: 2.10.0        # Dependency-Track 5.2.2
+      helm:
+        valuesObject:
+          database:
+            jdbcUrl: jdbc:postgresql://postgres:5432/dtrack?reWriteBatchedInserts=true
+            existingSecret:
+              name: dtrack-db       # platform/dependency-track/dtrack-db.yaml
+          secretManagement:
+            database:
+              kek:
+                existingSecret:
+                  name: dtrack-kek  # platform/dependency-track/dtrack-kek.yaml
+          frontend:
+            # The browser calls the API here. Matches the port-forward above;
+            # set to "" once the web interface has its own hostname.
+            apiBaseUrl: http://localhost:8080
+    - repoURL: https://github.com/XTRUST6G/xtrust-gitops.git
+      targetRevision: main
+      path: platform/dependency-track
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dependency-track
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: baseline
