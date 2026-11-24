@@ -6,10 +6,8 @@
 #   2. platform/dependency-track/ in this repository: its PostgreSQL database and
 #      the encrypted passwords (SealedSecrets)
 #
-# Open the web interface (until it has a hostname), in two terminals:
-#   kubectl -n dependency-track port-forward svc/dependency-track-api-server 8080:8080
-#   kubectl -n dependency-track port-forward svc/dependency-track-frontend 8081:8080
-# then browse to http://localhost:8081 (first login admin / admin, then change it).
+# Web interface: https://dtrack-xtrust-6g.eurodyn.com (internal only: company
+# network and VPN). HTTPS ends on the F5 run by TAC; the cluster gets plain HTTP.
 #
 # ADMIN ONLY: everything in platform/ is installed with cluster-wide rights.
 # Before raising targetRevision read the upgrade notes:
@@ -38,10 +36,12 @@ spec:
               kek:
                 existingSecret:
                   name: dtrack-kek  # platform/dependency-track/dtrack-kek.yaml
-          frontend:
-            # The browser calls the API here. Matches the port-forward above;
-            # set to "" once the web interface has its own hostname.
-            apiBaseUrl: http://localhost:8080
+          # One hostname for both parts: /api goes to the API server, the rest
+          # to the web interface, so the browser calls the API on the same address.
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            hostname: dtrack-xtrust-6g.eurodyn.com
     - repoURL: https://github.com/XTRUST6G/xtrust-gitops.git
       targetRevision: main
       path: platform/dependency-track
