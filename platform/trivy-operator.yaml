@@ -34,6 +34,26 @@ spec:
         # Rancher Monitoring (Prometheus) collects the findings as metrics.
         serviceMonitor:
           enabled: true
+        # Download the vulnerability databases and checks from their original
+        # source (GitHub). The default mirror (mirror.gcr.io) sometimes lacks the
+        # newest file, and then the Trivy server cannot start.
+        trivy:
+          dbRegistry: ghcr.io
+          dbRepository: aquasecurity/trivy-db
+          javaDbRegistry: ghcr.io
+          javaDbRepository: aquasecurity/trivy-java-db
+        policiesBundle:
+          registry: ghcr.io
+          repository: aquasecurity/trivy-checks
+        # Also run the node checks (CIS benchmark) on the 3 control-plane nodes.
+        nodeCollector:
+          tolerations:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+              effect: NoSchedule
+            - key: node-role.kubernetes.io/etcd
+              operator: Exists
+              effect: NoExecute
   destination:
     server: https://kubernetes.default.svc
     namespace: trivy-system
