@@ -1,0 +1,18 @@
+# Encrypted with sealed-secrets-cert.pem; only the cluster can decrypt it.
+# Dependency-Track API key of the team sbom-operator (upload SBOMs, create and manage projects).
+# Sync wave -1: created before sbom-operator starts.
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  name: dtrack-api-key
+  namespace: sbom-operator
+spec:
+  encryptedData:
+    api-key: AgBU3U21rafbfS2tZjLMWGqECVwebJHoulfY/MI3HgZiVnrVbuK7kXyETdjiofK1UkFhaxvQjOkKDN4xSclqoTY2iC2XM1Dk10tK3vsy1SM4/i5mCwPqFaV5K3jfzvQdzUNjEAGzCxFnLD3qTUS/S7czpH2tPl0XRouWdTzta7nyaWNx2IC70znY/cAs3U2EEXZ1Fp+O6NNUDUaDt0P4A200RU1udfWGWYdY8qZibNeBLzSFOS889OgCM/JqbjjQ65I0m0w8/Yi2V8xFwtZ/Co5ZEZ1wkKLstXYpeve7QCHRONdAnOLgupOybMk2WRWZFmUXZr/DY4esjOoCMFLKizrzvidnHkjCp1MNqk4OTqY71MUCi+FGMMMr90ZXDom9R7a67+5gXRBTRcRPA7aRjVhgcPGtoYulgt1KLxW365tzMs8HAI+ToKVrWCPFPnafTIinwU/6iox5zleO3N+aRXSbqe/J1pqVP6UkFy24/5MIKfV7OFhSt5vU+0XZgTlbsRG6t1VgdSCLEfzuv2SKrlnVXeGra+zRh8QS0p3cRDVcMvXCvbJGPbScHtM7U2lkavg74tA96VUU+mLrJPD1zobOHZSqWeNfyE1kEh+G8h+bbocPAVN/ViTY802SgMye9KL8KS4n+UkdhvBiKYsj/srfJuxWx//PgmvDDqw7KGfalaMr3MmOyujGlBrs4iPDCH6YprkBDX0OT8bsaWfz4Utb4BbS0A/PixpZiGailONgJkFgNRca24D6ktun3kk=
+  template:
+    metadata:
+      name: dtrack-api-key
+      namespace: sbom-operator
