@@ -89,7 +89,17 @@ command again. Example: `apps/xtrust-sandbox/hello-secret/`.
 
 ## Problems and requests
 
-Open an issue in your team's private repository in XTRUST6G (for example
-`XTRUST6G/UOP`), for example when something does not work or you need a
-hostname, more quota or a new kubeconfig. Only your team and the admins see it.
+Tickets go in your team's private repository in XTRUST6G, not in this public
+one. Only your team and the admins see them, and the admin is notified.
+
+1. Open the **Issues** tab of your team's repository, for example
+   `https://github.com/XTRUST6G/UOP/issues`, and click **New issue**.
+2. Start the title with your folder name, then the problem, for example
+   `uop - web-api does not start`.
+3. Say what you expected and what happened. Add the pull request link if there
+   is one, and the output of `kubectl get pods`, `kubectl get events` or the logs.
+4. The admin answers in the issue and closes it when it is solved.
+
+Open a ticket when something does not work or you need a hostname, more quota
+or a new kubeconfig. Changes to your app go in a pull request, not a ticket.
 Never paste passwords, tokens or your kubeconfig.
