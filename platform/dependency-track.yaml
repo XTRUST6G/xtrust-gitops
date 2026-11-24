@@ -42,6 +42,9 @@ spec:
             enabled: true
             ingressClassName: traefik
             hostname: dtrack-xtrust-6g.eurodyn.com
+            annotations:
+              # Only the F5 may connect: platform/dependency-track/f5-only.yaml
+              traefik.ingress.kubernetes.io/router.middlewares: dependency-track-f5-only@kubernetescrd
     - repoURL: https://github.com/XTRUST6G/xtrust-gitops.git
       targetRevision: main
       path: platform/dependency-track

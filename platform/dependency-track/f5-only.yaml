@@ -1,0 +1,13 @@
+# Only the F5 (10.250.156.10, run by TAC) may reach Dependency-Track through
+# Traefik. A request from anywhere else, even inside the company network, gets
+# "403 Forbidden"; people use https://dtrack-xtrust-6g.eurodyn.com instead.
+# Used by the Ingress (annotation in platform/dependency-track.yaml).
+# sbom-operator is not affected: it talks to the API inside the cluster.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: f5-only
+spec:
+  ipAllowList:
+    sourceRange:
+      - 10.250.156.10/32
